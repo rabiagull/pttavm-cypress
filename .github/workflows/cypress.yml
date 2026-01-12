@@ -2,22 +2,34 @@ name: Cypress Tests
 
 on:
   push:
-    branches:
-      - main
+  pull_request:
 
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      # 1️⃣ Repo’yu al
+      - uses: actions/checkout@v3
 
+      # 2️⃣ Node.js kur
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # 3️⃣ Proje bağımlılıklarını yükle
       - name: Install dependencies
         run: npm install
 
+      # 4️⃣ Cypress binary’yi yükle (burası eksikti, hatayı alıyordunuz)
+      - name: Install Cypress binary
+        run: npx cypress install
+
+      # 5️⃣ Testleri çalıştır
       - name: Run Cypress tests
         run: npx cypress run --record
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
           
